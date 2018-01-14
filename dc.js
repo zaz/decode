@@ -35,7 +35,7 @@ fs.readFile(file, "utf8", (err, contents) => {
 	}
 	freq_string = ""
 	for (let l of freqbet) {
-		freq_string += ("   " + freqs[l]).slice(-3)
+		freq_string += ("   " + (freqs[l] || 0)).slice(-3)
 	}
 	console.log(freq_string)
 	console.log()
