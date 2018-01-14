@@ -1,8 +1,15 @@
 const fs = require("fs")
+
 const file = process.argv[2]
 const alphabet = "abcdefghijklmnopqrstuvwxyz"
 const  freqbet = "etaoinshrdlcumwfgypbvkjxqz"
 const downcase = true
+const shift_amount = 0
+
+const preProcess = text => {
+	if (downcase) text = text.toLowerCase()
+	return text
+}
 
 const shiftLetter = (l, amount) => {
 	if (0 > alphabet.indexOf(l)) {
@@ -11,20 +18,11 @@ const shiftLetter = (l, amount) => {
 	return alphabet[(alphabet.indexOf(l) + amount) % 26]
 }
 
-const shift = (text, amount) => {
-	stext = ""
-	for (let l of text) {
-		stext += shiftLetter(l, amount)
-	}
-	return stext
-}
+const shift = (text, amount) =>
+	text.split("").map(l => shiftLetter(l, amount)).join("")
 
 fs.readFile(file, "utf8", (err, contents) => {
-	if (downcase) {
-		text = contents.toLowerCase()
-	} else {
-		text = contents
-	}
+	text = preProcess(contents)
 	console.log("  " + freqbet.split("").join("  "))
 	let freqs = new Map()
 	for (let l of text) {
@@ -37,5 +35,5 @@ fs.readFile(file, "utf8", (err, contents) => {
 	}
 	console.log(freq_string)
 	console.log()
-	console.log(shift(text, 0))
+	console.log(shift(text, shift_amount))
 })
