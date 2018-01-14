@@ -1,5 +1,7 @@
 const fs = require("fs")
+const wordListPath = require("word-list")
 
+const wordArray = fs.readFileSync(wordListPath, "utf8").split("\n")
 const file = process.argv[2]
 const alphabet = "abcdefghijklmnopqrstuvwxyz"
 const  freqbet = "etaoinshrdlcumwfgypbvkjxqz"
@@ -25,6 +27,19 @@ const shiftLetter = (l, amount) => {
 const shift = (text, amount) =>
 	text.split("").map(l => shiftLetter(l, amount)).join("")
 
+const wordsIn = text =>
+	wordArray.filter(word => text.indexOf(word) >= 0)
+	         .sort((a, b) => b.length - a.length)
+
+const splitByWords = text => {
+	let words = wordsIn(text)
+	let longest_word = words[0]
+	if (!longest_word) return text
+	let sections = text.split(longest_word)
+	let spaced = sections.map(splitByWords).join(" " + longest_word + " ")
+	return spaced
+}
+
 fs.readFile(file, "utf8", (err, contents) => {
 	text = preProcess(contents)
 	console.log("  " + freqbet.split("").join("  "))
@@ -40,4 +55,6 @@ fs.readFile(file, "utf8", (err, contents) => {
 	console.log(freq_string)
 	console.log()
 	console.log(shift(text, shift_amount))
+	console.log()
+	console.log( splitByWords(shift(text, shift_amount)) )
 })
