@@ -4,10 +4,14 @@ const file = process.argv[2]
 const alphabet = "abcdefghijklmnopqrstuvwxyz"
 const  freqbet = "etaoinshrdlcumwfgypbvkjxqz"
 const downcase = true
+const remove = [" ", "\n"]
 const shift_amount = 0
+
+const remove_regex = new RegExp(remove.join("|"), "g")
 
 const preProcess = text => {
 	if (downcase) text = text.toLowerCase()
+	text = text.replace(remove_regex, "")
 	return text
 }
 
